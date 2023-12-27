@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/model/current_weather_data.dart';
 import 'package:weather_app/model/hourly_forecast.dart';
 
+import '../model/weather_model.dart';
+
 class HourlyForecastWidget extends StatelessWidget {
-  final CurrentWeatherModel currentWeatherData;
-  final HourlyForecastModel hourlyData;
+  final WeatherModel weatherData;
   const HourlyForecastWidget({
     super.key,
-    required this.currentWeatherData,
-    required this.hourlyData,
+    required this.weatherData,
   });
 
   @override
@@ -18,7 +18,7 @@ class HourlyForecastWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -29,7 +29,7 @@ class HourlyForecastWidget extends StatelessWidget {
                   children: [
                     TextSpan(
                       text:
-                          "Feels like ${currentWeatherData.main!.feelsLike!.toInt().toString()}°       ",
+                          "Feels like ${weatherData.current!.feelsLike!.toInt().toString()}°       ",
                       style: const TextStyle(
                           fontSize: 15,
                           color: Colors.white,
@@ -44,7 +44,7 @@ class HourlyForecastWidget extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          "${currentWeatherData.main!.tempMax!.toInt().toString()}° ",
+                          "${weatherData.daily!.first!.temp!.max!.toInt().toString()}° ",
                       style: const TextStyle(
                           fontSize: 15,
                           color: Colors.white,
@@ -59,7 +59,7 @@ class HourlyForecastWidget extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          "${currentWeatherData.main!.tempMin!.toInt().toString()}°",
+                          "${weatherData.daily!.first!.temp!.min!.toInt().toString()}°",
                       style: const TextStyle(
                           fontSize: 15,
                           color: Colors.white,
@@ -69,12 +69,15 @@ class HourlyForecastWidget extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              Container(
-                height: 135,
+              SizedBox(
+                height: 150,
                 child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: hourlyData.list!.map((e) {
-                      DateTime dateTime = DateTime.parse(e.dtTxt!);
+                    children: weatherData.hourly!.map((e) {
+                      //DateTime dateTime = DateTime.parse(e.dtTxt!);
+                      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(e.dt!.toInt()! * 1000);
+                      //dateTime = dateTime.add(const Duration(hours: 5, minutes: 30));
+                      // dateTime = dateTime.toLocal();
                       String formattedTime = DateFormat.jm().format(dateTime);
                       num precipitation = e.pop! * 100;
                       return Padding(
@@ -99,7 +102,7 @@ class HourlyForecastWidget extends StatelessWidget {
                               height: 5,
                             ),
                             Text(
-                              " ${e.main!.temp!.toInt().toString()}°",
+                              " ${e!.temp!.toInt().toString()}°",
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 15),
                             ),
