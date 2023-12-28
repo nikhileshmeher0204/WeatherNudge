@@ -63,7 +63,7 @@ class WeatherProvider extends ChangeNotifier {
     print("extracting weather...");
     WeatherModel weatherData =
     await getWeather(lat, lon);
-    await getAirPollution(lat, lon);
+    await getAirPollutionData();
     return weatherData;
   }
 
@@ -81,21 +81,20 @@ class WeatherProvider extends ChangeNotifier {
     return hourlyForecast;
   }
 
-  Future<int?> getAirPollutionData() async{
+  Future<AirPollutionModel?> getAirPollutionData() async{
     AirPollutionModel? airPollutionModel = await getAirPollution(lat, lon);
-    print("AQI ${airPollutionModel.list!.first.main!.aqi}");
-    AQI = airPollutionModel.list!.first.main!.aqi;
-    return AQI;
+    AQI = calculateAQIIndia(airPollutionModel.list!.first.components!.pm25, 'pm25');
+    return airPollutionModel;
   }
 
 
 
-  int calculateAQIIndia(double concentration, String pollutant) {
+  int calculateAQIIndia(num? concentration, String pollutant) {
     // Define AQI breakpoints and indices for India
     Map<String, List<int>> aqiBreakpoints = {
-      'pm25': [0, 30, 60, 90, 120, 250],
-      'pm10': [0, 50, 100, 250, 350, 430],
-      'o3': [0, 50, 100, 168, 208, 748],
+      'pm25': [0, 35, 75, 115, 150, 250, 350, 500],
+      // 'pm10': [0, 50, 100, 250, 350, 430],
+      // 'o3': [0, 50, 100, 168, 208, 748],
       // Add breakpoints for other pollutants as needed
     };
 
@@ -113,8 +112,8 @@ class WeatherProvider extends ChangeNotifier {
     return aqi;
   }
 
-  int _calculateAQI(double concentration, List<int> breakpoints) {
-    if (concentration < breakpoints[0] || concentration > breakpoints.last) {
+  int _calculateAQI(num? concentration, List<int> breakpoints) {
+    if (concentration! < breakpoints[0] || concentration > breakpoints.last) {
       throw ArgumentError('Concentration value out of range');
     }
 

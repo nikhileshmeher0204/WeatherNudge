@@ -1,9 +1,14 @@
 import 'package:intl/intl.dart';
 
-String unixToITC(num? unix) {
+String unixToITCTime(num? unix) {
   DateTime dateTime =
       DateTime.fromMillisecondsSinceEpoch(unix!.toInt()! * 1000);
   return DateFormat.jm().format(dateTime);
+}
+String unixToITCDay(num? unix) {
+  DateTime dateTime =
+  DateTime.fromMillisecondsSinceEpoch(unix!.toInt()! * 1000);
+  return DateFormat('EEEE').format(dateTime);
 }
 
 String uvIndex(num? uv) {

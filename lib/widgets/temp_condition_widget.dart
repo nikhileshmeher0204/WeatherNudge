@@ -20,7 +20,7 @@ class TempConditionWidget extends StatelessWidget {
         Text(
           weatherProvider.cityName() ?? "",
           style: const TextStyle(
-              fontSize: 40, color: Colors.white),
+              fontSize: 45, color: Colors.white, fontFamily: 'Poppins', fontWeight: FontWeight.w500),
         ),
         const SizedBox(
           height: 10,
@@ -30,15 +30,16 @@ class TempConditionWidget extends StatelessWidget {
           style: const TextStyle(
               fontSize: 90,
               color: Colors.white,
-              fontWeight: FontWeight.w300),
+              fontWeight: FontWeight.w200,
+            fontFamily: 'Poppins'
+          ),
         ),
         Text(
           weatherData
               .current!.weather!.first.description!,
           style: const TextStyle(
               fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.w400),
+              color: Colors.white,),
         ),
       ],
     );

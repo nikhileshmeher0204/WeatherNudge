@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:weather_app/model/location_model.dart';
 import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/provider/weather_provider.dart';
+import 'package:weather_app/widgets/daily_forecast_widget.dart';
 import 'package:weather_app/widgets/hourly_forecast_widget.dart';
 import 'package:weather_app/widgets/insights_widget.dart';
 import 'package:weather_app/widgets/parameter_card_1x1_widget.dart';
 import 'package:weather_app/widgets/parameter_card_1x2_widget.dart';
 import 'package:weather_app/widgets/temp_condition_widget.dart';
 import 'package:weather_app/widgets/weather_background_widget.dart';
-
 import 'conversion.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -73,11 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               'Error: ${weatherSnapshot.error}');
                                         } else if (weatherSnapshot.hasData) {
                                           final weatherData =
-                                              weatherSnapshot.data!;
+                                          weatherSnapshot.data!;
 
                                           return Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               TempConditionWidget(
                                                 weatherData: weatherData,
@@ -88,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               HourlyForecastWidget(
                                                 weatherData: weatherData,
                                               ),
+
                                               const SizedBox(
                                                 height: 20,
                                               ),
@@ -98,31 +99,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   ParameterCard1x1Widget(
                                                     parameter: "Humidity",
                                                     parameterImage:
-                                                        "assets/humidity.png",
+                                                    "assets/humidity.png",
                                                     parameterValue:
-                                                        "${weatherData.current!.humidity.toString()}%",
+                                                    "${weatherData.current!.humidity.toString()}%",
                                                   ),
                                                   ParameterCard1x1Widget(
                                                     parameter: "AQI",
                                                     parameterImage:
-                                                        "assets/aqi.png",
+                                                    "assets/aqi.png",
                                                     parameterValue:
-                                                        weatherProvider
-                                                            .calculateAQIIndia(
-                                                                203.0, 'pm25'),
+                                                    weatherProvider
+                                                        .AQI,
                                                   ),
                                                   ParameterCard1x1Widget(
                                                     parameter: "Wind",
                                                     parameterImage:
-                                                        "assets/wind.png",
+                                                    "assets/wind.png",
                                                     parameterValue:
-                                                        "${weatherData.current!.windSpeed!.toInt().toString()} km/h",
+                                                    "${weatherData.current!.windSpeed!.toInt().toString()} km/h",
                                                   ),
                                                 ],
                                               ),
@@ -134,24 +134,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ParameterCard1x1Widget(
                                                     parameterValue: uvIndex(weatherData.current!.uvi!),
                                                     parameterImage:
-                                                        "assets/uv_index.png",
+                                                    "assets/uv_index.png",
                                                     parameter: "UV Index",
                                                   ),
                                                   const SizedBox(width: 5,),
                                                   ParameterCard1x2Widget(
-                                                      parameter1: "Sunrise",
-                                                      parameterImage1:
-                                                          "assets/sunrise.png",
-                                                      parameterValue1:
-                                                          unixToITC(weatherData.current!.sunrise),
+                                                    parameter1: "Sunrise",
+                                                    parameterImage1:
+                                                    "assets/sunrise.png",
+                                                    parameterValue1:
+                                                    unixToITCTime(weatherData.current!.sunrise),
                                                     parameter2: "Sunset",
                                                     parameterImage2: "assets/sunset.png",
-                                                    parameterValue2: unixToITC(weatherData.current!.sunset),
+                                                    parameterValue2: unixToITCTime(weatherData.current!.sunset),
                                                   ),
                                                 ],
-                                              )
+                                              ),
+                                              const SizedBox(height: 20,),
+                                              DailyForecastWidget(weatherData: weatherData),
                                             ],
-
                                           );
                                         } else {
                                           return const Text(
@@ -164,9 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                 },
                               ),
+
                             ],
                           ),
                         ),
+
                       ],
                     ),
                   ),

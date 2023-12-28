@@ -24,20 +24,18 @@ class InsightsWidget extends StatelessWidget {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Insights",
+                    "INSIGHTS",
                     style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                        fontSize: 15,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
-                const Divider(),
+                const Divider(color: Colors.white24,),
                 Text(
-                  "${weatherData.daily!.first!.summary}",
+                  "${weatherData.daily!.first.summary}",
                   style: const TextStyle(
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400),
+                      fontFamily: 'Poppins', color: Colors.white, fontSize: 20),
                 ),
               ],
             ),

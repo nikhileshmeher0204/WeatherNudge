@@ -29,51 +29,50 @@ class HourlyForecastWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            "Feels like ${weatherData.current!.feelsLike!.toInt().toString()}°       ",
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
+                Row(
+                  children: [
+                    Text(
+                      "FEELS LIKE ${weatherData.current!.feelsLike!.toInt().toString()}°",
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const TextSpan(
-                        text: "↑",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      TextSpan(
-                        text:
-                            "${weatherData.daily!.first!.temp!.max!.toInt().toString()}° ",
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      const TextSpan(
-                        text: "↓",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      TextSpan(
-                        text:
-                            "${weatherData.daily!.first!.temp!.min!.toInt().toString()}°",
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Expanded(child: Container()),
+                    const Text(
+                      "↑",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      "${weatherData.daily!.first!.temp!.max!.toInt().toString()}° ",
+                      style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Text(
+                      "↓",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      "${weatherData.daily!.first!.temp!.min!.toInt().toString()}°",
+                      style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
                 ),
-                const Divider(),
+                const Divider(
+                  color: Colors.white24,
+                ),
                 SizedBox(
                   height: 150,
                   child: ListView(
@@ -85,7 +84,7 @@ class HourlyForecastWidget extends StatelessWidget {
                         // dateTime = dateTime.toLocal();
 
                         // String formattedTime = DateFormat.jm().format(dateTime);
-                        String formattedTime = unixToITC(e.dt!);
+                        String formattedTime = unixToITCTime(e.dt!);
                         num precipitation = e.pop! * 100;
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -101,7 +100,8 @@ class HourlyForecastWidget extends StatelessWidget {
                               ),
                               Column(
                                 children: e.weather!.map((weather) {
-                                  return Image.asset("assets/${weather.icon}.png",
+                                  return Image.asset(
+                                      "assets/${weather.icon}.png",
                                       height: 40);
                                 }).toList(),
                               ),
@@ -113,10 +113,15 @@ class HourlyForecastWidget extends StatelessWidget {
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                               ),
-                              const SizedBox(height: 5,),
+                              const SizedBox(
+                                height: 5,
+                              ),
                               Row(
                                 children: [
-                                  Image.asset("assets/precipitation_drop.png", height: 15,),
+                                  Image.asset(
+                                    "assets/precipitation_drop.png",
+                                    height: 15,
+                                  ),
                                   Text(
                                     " ${precipitation.toInt()}%",
                                     style: const TextStyle(
