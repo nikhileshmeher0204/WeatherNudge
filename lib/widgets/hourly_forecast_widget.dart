@@ -77,21 +77,19 @@ class HourlyForecastWidget extends StatelessWidget {
                   height: 150,
                   child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: weatherData.hourly!.map((e) {
+                      children: weatherData.hourly!.take(13).map((e) {
                         //DateTime dateTime = DateTime.parse(e.dtTxt!);
                         // DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(e.dt!.toInt()! * 1000);
                         //dateTime = dateTime.add(const Duration(hours: 5, minutes: 30));
                         // dateTime = dateTime.toLocal();
 
                         // String formattedTime = DateFormat.jm().format(dateTime);
-                        String formattedTime = unixToITCTime(e.dt!);
-                        num precipitation = e.pop! * 100;
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
                               Text(
-                                formattedTime, // Display date/time or other relevant info
+                                unixToITCTime(e.dt!), // Display date/time or other relevant info
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                               ),
@@ -123,7 +121,7 @@ class HourlyForecastWidget extends StatelessWidget {
                                     height: 15,
                                   ),
                                   Text(
-                                    " ${precipitation.toInt()}%",
+                                    " ${(e.pop! * 100).toInt()}%",
                                     style: const TextStyle(
                                         color: Colors.white, fontSize: 15),
                                   ),

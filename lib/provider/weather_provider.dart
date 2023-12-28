@@ -14,9 +14,9 @@ class WeatherProvider extends ChangeNotifier {
   String? _city;
   cityName() => _city;
   int? AQI;
+  String? AQIInsight;
 
-
-  Future<LocationModel> getLocationByCity(String city) async{
+  Future<LocationModel> getLocationByCity(String city) async {
     List<LocationModel> locations = await getLocationByCityName(city);
     lat = locations.first.lat;
     lon = locations.first.lon;
@@ -25,15 +25,16 @@ class WeatherProvider extends ChangeNotifier {
     return locations.first;
     notifyListeners();
   }
-  getCityByLocation(double? lat, double? lon) async{
+
+  Future<LocationModel> getCityByLocation() async {
+    await _determinePosition();
     List<LocationModel> locations = await getCityNameByLocation(lat, lon);
     _city = locations.first.name!;
     print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
-    notifyListeners();
+    return locations.first;
   }
 
-
-   _determinePosition() async {
+  _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -49,29 +50,20 @@ class WeatherProvider extends ChangeNotifier {
     return await Geolocator.getCurrentPosition().then((value) {
       lat = value.latitude;
       lon = value.longitude;
-      getCityByLocation(lat, lon);
-      notifyListeners();
       print("lat: $lat, Lon: $lon");
     });
   }
 
-  determinePosition() => _determinePosition();
-
-
-
   Future<WeatherModel> getWeatherData() async {
     print("extracting weather...");
-    WeatherModel weatherData =
-    await getWeather(lat, lon);
+    WeatherModel weatherData = await getWeather(lat, lon);
     await getAirPollutionData();
     return weatherData;
   }
 
-
   Future<CurrentWeatherModel> getCurrentWeatherData() async {
     print("extracting weather...");
-    CurrentWeatherModel weatherData =
-        await getCurrentWeather(lat, lon);
+    CurrentWeatherModel weatherData = await getCurrentWeather(lat, lon);
     return weatherData;
   }
 
@@ -81,13 +73,30 @@ class WeatherProvider extends ChangeNotifier {
     return hourlyForecast;
   }
 
-  Future<AirPollutionModel?> getAirPollutionData() async{
+  Future<AirPollutionModel?> getAirPollutionData() async {
     AirPollutionModel? airPollutionModel = await getAirPollution(lat, lon);
-    AQI = calculateAQIIndia(airPollutionModel.list!.first.components!.pm25, 'pm25');
+    AQI = calculateAQIIndia(
+        airPollutionModel.list!.first.components!.pm25, 'pm25');
+    if (AQI != null) {
+      if (AQI! <= 50) {
+        AQIInsight = "Good";
+      } else if (AQI! > 51 && AQI! <= 100) {
+        AQIInsight = "Moderate";
+      } else if (AQI! > 101 && AQI! <= 200) {
+        AQIInsight = "Poor";
+      } else if (AQI! > 201 && AQI! <= 300) {
+        AQIInsight = "Unhealthy";
+      } else if (AQI! > 301 && AQI! <= 400) {
+        AQIInsight = "Unhealthy";
+      } else {
+        AQIInsight = "Severe";
+      }
+    } else {
+      AQIInsight = "Unknown";
+    }
+
     return airPollutionModel;
   }
-
-
 
   int calculateAQIIndia(num? concentration, String pollutant) {
     // Define AQI breakpoints and indices for India
@@ -125,11 +134,11 @@ class WeatherProvider extends ChangeNotifier {
         double iHigh = i * 50.0;
 
         // Apply the AQI formula
-        return ((iHigh - iLow) / (cHigh - cLow) * (concentration - cLow) + iLow).round();
+        return ((iHigh - iLow) / (cHigh - cLow) * (concentration - cLow) + iLow)
+            .round();
       }
     }
 
     throw StateError('Failed to calculate AQI');
   }
-
 }

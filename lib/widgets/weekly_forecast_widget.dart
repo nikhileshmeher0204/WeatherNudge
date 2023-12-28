@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/conversion.dart';
 import 'package:weather_app/model/weather_model.dart';
 
-class DailyForecastWidget extends StatelessWidget {
+class WeeklyForecastWidget extends StatelessWidget {
   final WeatherModel weatherData;
-  const DailyForecastWidget({super.key, required this.weatherData});
+  const WeeklyForecastWidget({super.key, required this.weatherData});
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,14 @@ class DailyForecastWidget extends StatelessWidget {
                     Column(
                         children: weatherData.daily!.map((e) {
                       return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                       (weatherData.daily!.indexOf(e) == 0)
                           ? 'Today'
                               : (weatherData.daily!.indexOf(e) == 1)
                           ? 'Tomorrow'
-                              : unixToITCDay(e.dt!.toInt()),
+                              : unixToITCDay(e.dt!.toInt()).substring(0,3),
                             style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -56,20 +57,26 @@ class DailyForecastWidget extends StatelessWidget {
                             }).toList(),
                           ),
                           const SizedBox(width: 40,),
-                          Text(
-                            "${e.temp!.min!.toInt()}°/${e.temp!.max!.toInt()}°",
-                            style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              "${e.temp!.min!.toInt()}°/${e.temp!.max!.toInt()}°",
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                           const SizedBox(width: 20,),
                           Image.asset("assets/precipitation_drop.png", height: 15,),
-                          Text(
-                            " ${e.pop! * 100.toInt()}%",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              " ${(e.pop! * 100).toInt()}%",
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 15,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ],
                       );

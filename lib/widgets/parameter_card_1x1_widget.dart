@@ -1,17 +1,15 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:weather_app/model/current_weather_data.dart';
 
 class ParameterCard1x1Widget extends StatelessWidget {
-  final parameter;
-  final parameterImage;
-  final parameterValue;
+  final String parameter;
+  final String parameterImage;
+  final String parameterValue;
   const ParameterCard1x1Widget({
     super.key,
-    this.parameter,
-    this.parameterImage,
-    this.parameterValue,
+    required this.parameter,
+    required this.parameterImage,
+    required this.parameterValue,
   });
 
   @override
@@ -45,7 +43,7 @@ class ParameterCard1x1Widget extends StatelessWidget {
                 ),
                 const SizedBox(height: 5,),
                 Text(
-                  "$parameterValue",
+                  parameterValue,
                   style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
