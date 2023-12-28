@@ -16,12 +16,13 @@ class WeatherProvider extends ChangeNotifier {
   int? AQI;
 
 
-  getLocationByCity(String city) async{
+  Future<LocationModel> getLocationByCity(String city) async{
     List<LocationModel> locations = await getLocationByCityName(city);
     lat = locations.first.lat;
     lon = locations.first.lon;
     _city = city;
     print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
+    return locations.first;
     notifyListeners();
   }
   getCityByLocation(double? lat, double? lon) async{
@@ -62,6 +63,7 @@ class WeatherProvider extends ChangeNotifier {
     print("extracting weather...");
     WeatherModel weatherData =
     await getWeather(lat, lon);
+    await getAirPollution(lat, lon);
     return weatherData;
   }
 

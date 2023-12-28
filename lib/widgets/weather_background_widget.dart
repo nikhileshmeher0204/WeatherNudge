@@ -13,13 +13,32 @@ class _WeatherBackgroundWidgetState extends State<WeatherBackgroundWidget> {
   @override
   void initState() {
     videoController = VideoPlayerController.asset("assets/moving_clouds.mp4")..initialize().then((_){
-      videoController.play();
-      videoController.setLooping(true);
+      if (mounted) {
+        setState(() {
+          videoController.play();
+          videoController.setLooping(true);
+        });
+      }
     });
     super.initState();
   }
 
 
   @override
-  Widget build(BuildContext context) => VideoPlayer(videoController);
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      return Container(
+        width: constraints.maxWidth,
+        height: constraints.maxHeight,
+        child: AspectRatio(
+            aspectRatio: videoController.value.aspectRatio,
+            child: VideoPlayer(videoController)),
+      );
+    }
+  );
+  @override
+  void dispose() {
+    videoController.dispose();
+    super.dispose();
+  }
 }

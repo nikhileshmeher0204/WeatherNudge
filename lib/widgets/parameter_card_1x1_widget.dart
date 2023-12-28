@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:weather_app/model/current_weather_data.dart';
 
-class ParameterCardWidget extends StatelessWidget {
+class ParameterCard1x1Widget extends StatelessWidget {
   final parameter;
   final parameterImage;
   final parameterValue;
-  const ParameterCardWidget({
+  const ParameterCard1x1Widget({
     super.key,
     this.parameter,
     this.parameterImage,
@@ -16,9 +16,12 @@ class ParameterCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 130,
       width: 120,
+      decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
