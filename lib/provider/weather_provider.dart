@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/model/current_weather_data.dart';
@@ -15,6 +16,7 @@ class WeatherProvider extends ChangeNotifier {
   cityName() => _city;
   int? AQI;
   String? AQIInsight;
+  String? weatherBackground;
 
   Future<LocationModel> getLocationByCity(String city) async {
     List<LocationModel> locations = await getLocationByCityName(city);
@@ -23,7 +25,6 @@ class WeatherProvider extends ChangeNotifier {
     _city = city;
     print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
     return locations.first;
-    notifyListeners();
   }
 
   Future<LocationModel> getCityByLocation() async {
@@ -55,8 +56,10 @@ class WeatherProvider extends ChangeNotifier {
   }
 
   Future<WeatherModel> getWeatherData() async {
-    print("extracting weather...");
+    print("extracting weather...!!!!!!!!!!!!!!");
     WeatherModel weatherData = await getWeather(lat, lon);
+    await getWeatherBackground(weatherData.current!.weather!.first.main);
+    print("weather background in getWeatherData(): $weatherBackground");
     await getAirPollutionData();
     return weatherData;
   }
@@ -140,5 +143,40 @@ class WeatherProvider extends ChangeNotifier {
     }
 
     throw StateError('Failed to calculate AQI');
+  }
+
+  Future<void> getWeatherBackground(String? weather)async {
+    DateTime now = DateTime.now();
+    int currentHour = now.hour;
+    const int dayStartHour = 6;
+    const int morningEndHour = 9;
+    const int eveningHour = 17;
+    const int nightStartHour = 18;
+    if (weather == "Clear" || weather == "Clouds") {
+      if(currentHour >= dayStartHour && currentHour < morningEndHour)
+        weatherBackground =  "assets/cloudy_morning.mp4";
+        else if(currentHour >= eveningHour && currentHour < nightStartHour)
+        weatherBackground =  "assets/evening.mp4";
+        else if(currentHour>=nightStartHour)
+            weatherBackground = "assets/night_moon.mp4";
+    } else if (weather == "Rain" || weather == "Drizzle") {
+      weatherBackground =  "assets/light_rain.mp4";
+    } else if (weather == "Thunderstorm") {
+      weatherBackground =  "assets/thunderstorm.mp4";
+    }
+    else{
+      weatherBackground =  "assets/moving_clouds.mp4";
+    }
+
+  }
+  bool isDaytimeNow() {
+    DateTime now = DateTime.now();
+    int currentHour = now.hour;
+
+    // You may adjust the threshold based on your preference for day and night
+    const int dayStartHour = 6;
+    const int nightStartHour = 18;
+
+    return currentHour >= dayStartHour && currentHour < nightStartHour;
   }
 }

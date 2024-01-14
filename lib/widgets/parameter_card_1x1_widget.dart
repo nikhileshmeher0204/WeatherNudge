@@ -16,7 +16,7 @@ class ParameterCard1x1Widget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 130,
-      width: 120,
+      width: 130,
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20)),
@@ -45,7 +45,7 @@ class ParameterCard1x1Widget extends StatelessWidget {
                 Text(
                   parameterValue,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       color: Colors.white,
                       fontWeight: FontWeight.w400),
                 ),

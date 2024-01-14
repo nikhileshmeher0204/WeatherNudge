@@ -13,7 +13,7 @@ class WeeklyForecastWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(20)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
@@ -32,18 +32,21 @@ class WeeklyForecastWidget extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                    const Divider(color: Colors.white24, ),
+                    const Divider(
+                      color: Colors.white24,
+                    ),
                     Column(
                         children: weatherData.daily!.map((e) {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                      (weatherData.daily!.indexOf(e) == 0)
-                          ? 'Today'
-                              : (weatherData.daily!.indexOf(e) == 1)
-                          ? 'Tomorrow'
-                              : unixToITCDay(e.dt!.toInt()).substring(0,3),
+                            (weatherData.daily!.indexOf(e) == 0)
+                                ? 'Today'
+                                : (weatherData.daily!.indexOf(e) == 1)
+                                    ? 'Tomorrow'
+                                    : unixToITCDay(e.dt!.toInt())
+                                        .substring(0, 3),
                             style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -56,9 +59,11 @@ class WeeklyForecastWidget extends StatelessWidget {
                                   height: 30);
                             }).toList(),
                           ),
-                          const SizedBox(width: 40,),
+                          const SizedBox(
+                            width: 40,
+                          ),
                           SizedBox(
-                            width: 50,
+                            width: 60,
                             child: Text(
                               "${e.temp!.min!.toInt()}°/${e.temp!.max!.toInt()}°",
                               style: const TextStyle(
@@ -67,14 +72,20 @@ class WeeklyForecastWidget extends StatelessWidget {
                                   fontWeight: FontWeight.w400),
                             ),
                           ),
-                          const SizedBox(width: 20,),
-                          Image.asset("assets/precipitation_drop.png", height: 15,),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Image.asset(
+                            "assets/precipitation_drop.png",
+                            height: 15,
+                          ),
                           SizedBox(
                             width: 50,
                             child: Text(
                               " ${(e.pop! * 100).toInt()}%",
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 15,
+                                  color: Colors.white,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w400),
                             ),
                           ),

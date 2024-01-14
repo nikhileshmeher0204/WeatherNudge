@@ -33,9 +33,9 @@ class InsightsWidget extends StatelessWidget {
                 ),
                 const Divider(color: Colors.white24,),
                 Text(
-                  "${weatherData.daily!.first.summary}",
+                  "• ${weatherData.daily!.first.summary}",
                   style: const TextStyle(
-                      fontFamily: 'Poppins', color: Colors.white, fontSize: 20),
+                       color: Colors.white, fontSize: 20),
                 ),
               ],
             ),
