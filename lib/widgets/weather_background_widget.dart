@@ -17,7 +17,7 @@ class _WeatherBackgroundWidgetState extends State<WeatherBackgroundWidget> {
   void initState() {
     videoController = VideoPlayerController.asset(
         "${Provider.of<WeatherProvider>(context, listen: false).weatherBackground}"
-      // "assets/light_rain.mp4"
+      //"assets/light_rain.mp4"
     )
       ..initialize().then((_) {
         if (mounted) {
@@ -36,12 +36,18 @@ class _WeatherBackgroundWidgetState extends State<WeatherBackgroundWidget> {
         return Container(
           width: constraints.maxWidth,
           height: constraints.maxHeight,
-          child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                  width: videoController.value.size.width,
-                  height: videoController.value.size.height,
-                  child: VideoPlayer(videoController))),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                        width: videoController.value.size.width,
+                        height: videoController.value.size.height,
+                        child: VideoPlayer(videoController))),
+              ),
+            ]
+          ),
         );
       });
   @override

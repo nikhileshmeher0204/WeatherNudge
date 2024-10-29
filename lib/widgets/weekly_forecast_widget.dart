@@ -63,7 +63,7 @@ class WeeklyForecastWidget extends StatelessWidget {
                             width: 40,
                           ),
                           SizedBox(
-                            width: 60,
+                            width: 70,
                             child: Text(
                               "${e.temp!.min!.toInt()}°/${e.temp!.max!.toInt()}°",
                               style: const TextStyle(
@@ -77,7 +77,7 @@ class WeeklyForecastWidget extends StatelessWidget {
                           ),
                           Image.asset(
                             "assets/precipitation_drop.png",
-                            height: 15,
+                            height: 20,
                           ),
                           SizedBox(
                             width: 50,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/model/current_weather_data.dart';
 import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/repo/repo.dart';
@@ -13,26 +14,76 @@ class WeatherProvider extends ChangeNotifier {
   double? lat;
   double? lon;
   String? _city;
-  cityName() => _city;
+  String? userInputCity = "";
   int? AQI;
   String? AQIInsight;
   String? weatherBackground;
 
-  Future<LocationModel> getLocationByCity(String city) async {
-    List<LocationModel> locations = await getLocationByCityName(city);
-    lat = locations.first.lat;
-    lon = locations.first.lon;
-    _city = city;
-    print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
-    return locations.first;
+
+  // WeatherModel? _weatherData;
+  //
+  // WeatherModel? get weatherData => _weatherData;
+  //
+  // WeatherProvider() {
+  //   loadWeatherData(); // Load saved data on initialization
+  // }
+  //
+  // Future<void> loadWeatherData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   userInputCity = prefs.getString('userInputCity') ?? "";
+  //   if (userInputCity != null && userInputCity!.isNotEmpty) {
+  //     await getWeatherForCity(userInputCity!);
+  //   }
+  //   notifyListeners();
+  // }
+  //
+  // Future<void> saveWeatherDataLocally() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('userInputCity', userInputCity ?? "");
+  //   if (_weatherData != null) {
+  //     // Assuming _weatherData has a toJson method to serialize it
+  //     await prefs.setString('weatherData', _weatherData!.toJson() as String);
+  //   }
+  // }
+
+  // Future<LocationModel> getLocationByCity(String city) async {
+  //   List<LocationModel> locations = await getLocationByCityName(city);
+  //   lat = locations.first.lat;
+  //   lon = locations.first.lon;
+  //   _city = city;
+  //   print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
+  //   return locations.first;
+  // }
+
+  // Future<LocationModel> getCityByLocation() async {
+  //   await _determinePosition();
+  //   List<LocationModel> locations = await getCityNameByLocation(lat, lon);
+  //   _city = locations.first.name!;
+  //   print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
+  //   return locations.first;
+  // }
+
+  Future<LocationModel> getWeatherForCity(String userInputCity) async {
+    if (userInputCity!.isEmpty) {
+      await _determinePosition();
+      List<LocationModel> locations = await getCityNameByLocation(lat, lon);
+      _city = locations.first.name!;
+      print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
+      return locations.first;
+    } else {
+      List<LocationModel> locations =
+          await getLocationByCityName(userInputCity!);
+      lat = locations.first.lat;
+      lon = locations.first.lon;
+      _city = userInputCity;
+      print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
+      return locations.first;
+    }
   }
 
-  Future<LocationModel> getCityByLocation() async {
-    await _determinePosition();
-    List<LocationModel> locations = await getCityNameByLocation(lat, lon);
-    _city = locations.first.name!;
-    print("Selected: ${locations.first.name}, lon: $lat, lon: $lon");
-    return locations.first;
+  Future<void> updateCityAndFetchWeather() async {
+    //await saveWeatherDataLocally();
+    notifyListeners();
   }
 
   _determinePosition() async {
@@ -61,12 +112,15 @@ class WeatherProvider extends ChangeNotifier {
     await getWeatherBackground(weatherData.current!.weather!.first.main);
     print("weather background in getWeatherData(): $weatherBackground");
     await getAirPollutionData();
+    //await saveWeatherDataLocally();
     return weatherData;
   }
 
   Future<CurrentWeatherModel> getCurrentWeatherData() async {
     print("extracting weather...");
     CurrentWeatherModel weatherData = await getCurrentWeather(lat, lon);
+    //await saveWeatherDataLocally();
+
     return weatherData;
   }
 
@@ -145,30 +199,61 @@ class WeatherProvider extends ChangeNotifier {
     throw StateError('Failed to calculate AQI');
   }
 
-  Future<void> getWeatherBackground(String? weather)async {
-    DateTime now = DateTime.now();
-    int currentHour = now.hour;
-    const int dayStartHour = 6;
-    const int morningEndHour = 9;
-    const int eveningHour = 17;
-    const int nightStartHour = 18;
-    if (weather == "Clear" || weather == "Clouds") {
-      if(currentHour >= dayStartHour && currentHour < morningEndHour)
-        weatherBackground =  "assets/cloudy_morning.mp4";
-        else if(currentHour >= eveningHour && currentHour < nightStartHour)
-        weatherBackground =  "assets/evening.mp4";
-        else if(currentHour>=nightStartHour)
+  Future<void> getWeatherBackground(String? weather) async {
+    try {
+      if (weather != null) {
+        weather = weather.trim(); // Trim leading and trailing spaces
+
+        DateTime now = DateTime.now();
+        int currentHour = now.hour;
+        const int dayStartHour = 6;
+        const int morningEndHour = 9;
+        const int eveningHour = 17;
+        const int nightStartHour = 18;
+        print("Weather: $weather");
+        print("Current hour: $currentHour");
+
+        if (weather == "Clear" || weather == "Clouds") {
+          print("weather==Clouds");
+          if (currentHour >= dayStartHour && currentHour < morningEndHour) {
+            weatherBackground = "assets/cloudy_morning.mp4";
+            print("Setting background to cloudy morning");
+          } else if (currentHour >= morningEndHour &&
+              currentHour < eveningHour) {
+            weatherBackground = "assets/moving_clouds.mp4";
+            print("Setting background to moving clouds");
+          } else if (currentHour >= eveningHour &&
+              currentHour < nightStartHour) {
+            weatherBackground = "assets/evening.mp4";
+            print("Setting background to evening");
+          }  else if (currentHour >= nightStartHour && currentHour<=24) {
             weatherBackground = "assets/night_moon.mp4";
-    } else if (weather == "Rain" || weather == "Drizzle") {
-      weatherBackground =  "assets/light_rain.mp4";
-    } else if (weather == "Thunderstorm") {
-      weatherBackground =  "assets/thunderstorm.mp4";
-    }
-    else{
-      weatherBackground =  "assets/moving_clouds.mp4";
+            print("Setting background to night moon");
+          } else {
+            weatherBackground = "assets/moving_clouds.mp4";
+            print("Setting background to moving clouds");
+          }
+        } else if (weather == "Rain" || weather == "Drizzle") {
+          weatherBackground = "assets/light_rain.mp4";
+          print("Setting background to light rain");
+        } else if (weather == "Thunderstorm") {
+          weatherBackground = "assets/thunderstorm.mp4";
+          print("Setting background to thunderstorm");
+        } else {
+          weatherBackground = "assets/moving_clouds.mp4";
+          print("Setting background to moving clouds");
+        }
+      } else {
+        print("Weather is null!");
+      }
+    } catch (e, stackTrace) {
+      print("Error in getWeatherBackground: $e");
+      print(stackTrace);
     }
 
+    print("Final weather background: $weatherBackground");
   }
+
   bool isDaytimeNow() {
     DateTime now = DateTime.now();
     int currentHour = now.hour;

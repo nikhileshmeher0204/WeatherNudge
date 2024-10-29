@@ -22,8 +22,8 @@ class ParameterCard2x1Widget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      width: 245,
+      height: 125,
+      width: 280,
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20)),

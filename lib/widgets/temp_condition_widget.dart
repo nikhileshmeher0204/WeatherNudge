@@ -1,14 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/provider/weather_provider.dart';
-
-import '../model/current_weather_data.dart';
-import '../model/hourly_forecast.dart';
+import '../model/location_model.dart';
 import '../model/weather_model.dart';
 
 class TempConditionWidget extends StatelessWidget {
   final WeatherModel weatherData;
-  const TempConditionWidget({super.key, required this.weatherData});
+  final LocationModel locationData;
+  const TempConditionWidget(
+      {super.key, required this.weatherData, required this.locationData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +18,31 @@ class TempConditionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          weatherProvider.cityName() ?? "",
-          style: const TextStyle(
-              fontSize: 45, color: Colors.white, fontFamily: 'Poppins', fontWeight: FontWeight.w500),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (weatherProvider.userInputCity!.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(right: 5.0, top: 17),
+                child: Icon(
+                  CupertinoIcons.location_fill,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            Expanded(
+              child: Text(
+                locationData.name ?? "",
+                style: const TextStyle(
+                    fontSize: 45,
+                    color: Colors.white,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
         const SizedBox(
           height: 10,
@@ -31,15 +53,14 @@ class TempConditionWidget extends StatelessWidget {
               fontSize: 90,
               color: Colors.white,
               fontWeight: FontWeight.w200,
-            fontFamily: 'Poppins'
-          ),
+              fontFamily: 'Poppins'),
         ),
         Text(
-          weatherData
-              .current!.weather!.first.description!,
+          weatherData.current!.weather!.first.description!,
           style: const TextStyle(
-              fontSize: 20,
-              color: Colors.white,),
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
       ],
     );
