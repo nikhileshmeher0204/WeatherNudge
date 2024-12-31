@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_app/keys.dart';
 import 'package:weather_app/model/current_weather_data.dart';
 import 'package:weather_app/model/hourly_forecast.dart';
 import 'package:weather_app/model/location_model.dart';
 import 'package:weather_app/model/weather_model.dart';
 
 import '../model/air_pollution_model.dart';
+
+final String API_KEY1 = dotenv.env['API_KEY1'] ?? '';
+final String API_KEY2 = dotenv.env['API_KEY2'] ?? '';
 
 Future<List<LocationModel>> getLocationByCityName(String city) async {
   try {
@@ -19,7 +22,8 @@ Future<List<LocationModel>> getLocationByCityName(String city) async {
       final List<LocationModel> locations =
           jsonList.map((json) => LocationModel.fromJson(json)).toList();
       (locations.forEach((element) {
-        print("${element.name}, ${element.state}, ${element.country}, ${element.lat}, ${element.lon}");
+        print(
+            "${element.name}, ${element.state}, ${element.country}, ${element.lat}, ${element.lon}");
       }));
       return locations;
     } else {
@@ -31,8 +35,8 @@ Future<List<LocationModel>> getLocationByCityName(String city) async {
   }
 }
 
-
-Future<List<LocationModel>> getCityNameByLocation(double? lat, double? lon) async {
+Future<List<LocationModel>> getCityNameByLocation(
+    double? lat, double? lon) async {
   try {
     final response = await http.get(
       Uri.parse(
@@ -41,9 +45,10 @@ Future<List<LocationModel>> getCityNameByLocation(double? lat, double? lon) asyn
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
       final List<LocationModel> locations =
-      jsonList.map((json) => LocationModel.fromJson(json)).toList();
+          jsonList.map((json) => LocationModel.fromJson(json)).toList();
       (locations.forEach((element) {
-        print("${element.name}, ${element.state}, ${element.country}, ${element.lat}, ${element.lon}");
+        print(
+            "${element.name}, ${element.state}, ${element.country}, ${element.lat}, ${element.lon}");
       }));
       return locations;
     } else {
@@ -55,22 +60,20 @@ Future<List<LocationModel>> getCityNameByLocation(double? lat, double? lon) asyn
   }
 }
 
-
 Future<WeatherModel> getWeather(double? lat, double? lon) async {
-  try{
+  try {
     final response = await http.get(
       Uri.parse(
           "https://api.openweathermap.org/data/3.0/onecall?lat=$lat&lon=$lon&units=metric&appid=$API_KEY2"),
     );
     if (response.statusCode == 200) {
       WeatherModel weatherModelDataResponse =
-      WeatherModel.fromJson(jsonDecode(response.body));
+          WeatherModel.fromJson(jsonDecode(response.body));
       return weatherModelDataResponse;
     } else {
       throw Exception('Failed to load weather: ${response.statusCode}');
     }
-
-  } catch (e){
+  } catch (e) {
     print("error fetching weather: $e");
     rethrow;
   }
@@ -116,17 +119,18 @@ Future<HourlyForecastModel> getHourlyForecast(double? lat, double? lon) async {
 }
 
 Future<AirPollutionModel> getAirPollution(double? lat, double? lon) async {
-  try{
+  try {
     final response = await http.get(
       Uri.parse(
           "http://api.openweathermap.org/data/2.5/air_pollution?lat=$lat&lon=$lon&&appid=$API_KEY1"),
     );
     if (response.statusCode == 200) {
       AirPollutionModel airPollutionModel =
-      AirPollutionModel.fromJson(jsonDecode(response.body));
+          AirPollutionModel.fromJson(jsonDecode(response.body));
       return airPollutionModel;
     } else {
-      throw Exception('Failed to get air pollution data: ${response.statusCode}');
+      throw Exception(
+          'Failed to get air pollution data: ${response.statusCode}');
     }
   } catch (e) {
     print('Error fetching air pollution data: $e');

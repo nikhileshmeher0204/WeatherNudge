@@ -19,7 +19,6 @@ class WeatherProvider extends ChangeNotifier {
   String? AQIInsight;
   String? weatherBackground;
 
-
   // WeatherModel? _weatherData;
   //
   // WeatherModel? get weatherData => _weatherData;
@@ -109,7 +108,7 @@ class WeatherProvider extends ChangeNotifier {
   Future<WeatherModel> getWeatherData() async {
     print("extracting weather...!!!!!!!!!!!!!!");
     WeatherModel weatherData = await getWeather(lat, lon);
-    await getWeatherBackground(weatherData.current!.weather!.first.main);
+    await getWeatherBackground(weatherData);
     print("weather background in getWeatherData(): $weatherBackground");
     await getAirPollutionData();
     //await saveWeatherDataLocally();
@@ -199,13 +198,30 @@ class WeatherProvider extends ChangeNotifier {
     throw StateError('Failed to calculate AQI');
   }
 
-  Future<void> getWeatherBackground(String? weather) async {
+  Future<void> getWeatherBackground(WeatherModel weatherData) async {
     try {
+      String? weather = weatherData.current!.weather!.first.main;
       if (weather != null) {
-        weather = weather.trim(); // Trim leading and trailing spaces
+        weather = weather.trim();
 
-        DateTime now = DateTime.now();
-        int currentHour = now.hour;
+        final int locationTimestamp = weatherData.current?.dt?.toInt() ?? 0;
+        final int timezoneOffset = weatherData.timezoneOffset?.toInt() ?? 0;
+
+        print("Unix timestamp from API: $locationTimestamp");
+        print("Timezone offset (seconds): $timezoneOffset");
+
+        // Convert to location's time (multiply by 1000 for milliseconds)
+        final DateTime locationTime = DateTime.fromMillisecondsSinceEpoch(
+                locationTimestamp * 1000,
+                isUtc: true)
+            .add(Duration(seconds: timezoneOffset));
+
+        print("Location time (UTC): ${locationTime.toUtc()}");
+        print("Location time (Local): $locationTime");
+
+        final int currentHour = locationTime.hour;
+        print("Current hour at location: $currentHour");
+
         const int dayStartHour = 6;
         const int morningEndHour = 9;
         const int eveningHour = 17;
@@ -214,25 +230,41 @@ class WeatherProvider extends ChangeNotifier {
         print("Current hour: $currentHour");
 
         if (weather == "Clear" || weather == "Clouds") {
-          print("weather==Clouds");
-          if (currentHour >= dayStartHour && currentHour < morningEndHour) {
-            weatherBackground = "assets/cloudy_morning.mp4";
-            print("Setting background to cloudy morning");
-          } else if (currentHour >= morningEndHour &&
-              currentHour < eveningHour) {
-            weatherBackground = "assets/moving_clouds.mp4";
-            print("Setting background to moving clouds");
-          } else if (currentHour >= eveningHour &&
-              currentHour < nightStartHour) {
-            weatherBackground = "assets/evening.mp4";
-            print("Setting background to evening");
-          }  else if (currentHour >= nightStartHour && currentHour<=24) {
+          print("Weather is Clear/Clouds, checking time periods...");
+
+          // Night period: 6 PM (18:00) to 6 AM (6:00)
+          if (currentHour >= nightStartHour || currentHour < dayStartHour) {
             weatherBackground = "assets/night_moon.mp4";
-            print("Setting background to night moon");
-          } else {
-            weatherBackground = "assets/moving_clouds.mp4";
-            print("Setting background to moving clouds");
+            print(
+                "Night time detected (${currentHour}:00) - Setting night moon background");
           }
+          // Morning period: 6 AM to 9 AM
+          else if (currentHour >= dayStartHour &&
+              currentHour < morningEndHour) {
+            weatherBackground = "assets/cloudy_morning.mp4";
+            print(
+                "Morning time detected (${currentHour}:00) - Setting cloudy morning background");
+          }
+          // Day period: 9 AM to 5 PM
+          else if (currentHour >= morningEndHour && currentHour < eveningHour) {
+            weatherBackground = "assets/moving_clouds.mp4";
+            print(
+                "Day time detected (${currentHour}:00) - Setting moving clouds background");
+          }
+          // Evening period: 5 PM to 6 PM
+          else if (currentHour >= eveningHour && currentHour < nightStartHour) {
+            weatherBackground = "assets/evening.mp4";
+            print(
+                "Evening time detected (${currentHour}:00) - Setting evening background");
+          }
+        } else if (weather == "Snow") {
+          weatherBackground = "assets/snow.mp4";
+          print("Setting background to light rain");
+        } else if (currentHour >= nightStartHour ||
+            currentHour < dayStartHour) {
+          weatherBackground = "assets/night_moon.mp4";
+          print(
+              "Night time detected (${currentHour}:00) - Setting night moon background");
         } else if (weather == "Rain" || weather == "Drizzle") {
           weatherBackground = "assets/light_rain.mp4";
           print("Setting background to light rain");

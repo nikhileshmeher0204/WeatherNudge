@@ -89,7 +89,10 @@ class HourlyForecastWidget extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                unixToITCTime(e.dt!), // Display date/time or other relevant info
+                                unixToITCTime(
+                                    e.dt!,
+                                    weatherData
+                                        .timezoneOffset!), // Display date/time or other relevant info
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                               ),

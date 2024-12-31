@@ -1,13 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/home_screen.dart';
 import 'package:weather_app/provider/state_provider.dart';
 import 'package:weather_app/provider/weather_provider.dart';
 import 'package:weather_app/screens/search_cities_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await dotenv.load();
+    print("Environment loaded successfully");
+  } catch (e) {
+    print("Error loading environment: $e");
+  }
+
   //Setting SystemUIOverlay
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
@@ -15,7 +25,8 @@ void main() {
   ));
 
   //Setting SystemUIMode
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]);
   runApp(const MyApp());
 }
 
@@ -31,7 +42,7 @@ class MyApp extends StatelessWidget {
           create: (_) => WeatherProvider(),
         ),
         ChangeNotifierProvider(
-        create: (_) => StateProvider(),
+          create: (_) => StateProvider(),
         )
       ],
       child: MaterialApp(
@@ -45,9 +56,6 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeScreen.routeName: (context) => const HomeScreen(),
           SearchCitiesScreen.routeName: (context) => const SearchCitiesScreen(),
-
-
-
         },
       ),
     );

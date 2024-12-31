@@ -173,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           unixToITCTime(
                                                               weatherData
                                                                   .current!
-                                                                  .sunrise),
+                                                                  .sunrise,
+                                                              weatherData
+                                                                  .timezoneOffset),
                                                       parameter2: "Sunset",
                                                       parameterImage2:
                                                           "assets/sunset.png",
@@ -181,7 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           unixToITCTime(
                                                               weatherData
                                                                   .current!
-                                                                  .sunset),
+                                                                  .sunset,
+                                                              weatherData
+                                                                  .timezoneOffset),
                                                     ),
                                                   ],
                                                 ),

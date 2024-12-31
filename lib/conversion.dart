@@ -1,10 +1,12 @@
 import 'package:intl/intl.dart';
 
-String unixToITCTime(num? unix) {
+String unixToITCTime(num? unix, num? timezoneOffset) {
   if (unix == null) {
     return "N/A"; // Return a default value if unix is null
   }
-  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(unix.toInt() * 1000);
+  DateTime dateTime =
+      DateTime.fromMillisecondsSinceEpoch(unix.toInt() * 1000, isUtc: true)
+          .add(Duration(seconds: timezoneOffset!.toInt()));
   return DateFormat.jm().format(dateTime);
 }
 
