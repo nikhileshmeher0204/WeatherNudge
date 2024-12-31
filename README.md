@@ -76,9 +76,22 @@ fonts:
 
 ## Screenshots 🖼️
 
-[weather_nudge_screen_record3.webm](https://github.com/user-attachments/assets/07bd3b17-846e-4067-bdab-e1f4e4dbe343)
-[weather_nudge_screen_record2.webm](https://github.com/user-attachments/assets/ec65e679-41bb-4a46-90cd-f0abf6a81317)
-[weather_nudge_screen_record1.webm](https://github.com/user-attachments/assets/41ec1126-dd1b-4924-83df-9ed8ec6dcde0)
+
+https://github.com/user-attachments/assets/f553940f-4424-4e58-9a37-32e0545aa5c7
+
+
+
+https://github.com/user-attachments/assets/828be78c-a077-42bf-b9f2-70a3b60b5fcf
+
+
+
+https://github.com/user-attachments/assets/31fc541a-4cbe-466e-b8df-166e1bc429f6
+
+
+
+https://github.com/user-attachments/assets/f9d37809-8fa9-4761-842a-ed780bca6950
+
+
 
 ## API Reference 🌐
 
