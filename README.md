@@ -1,16 +1,103 @@
-# weather_app
+# WeatherNudge ☁️⛅️
 
-A new Flutter project.
+A modern Flutter weather application that provides real-time weather information with beautiful dynamic backgrounds based on current weather conditions and time of day.
 
-## Getting Started
+## Features 🌍
 
-This project is a starting point for a Flutter application.
+- ⏳ Real-time weather data
+- 🎥 Dynamic video backgrounds based on weather conditions
+- 🕒 Hourly and weekly forecasts
+- 📊 Air quality index (AQI) monitoring
+- 📍 Location-based weather updates
+- 🔍 Search functionality for different locations
+- ⏰ Time-aware UI (changes based on location's current time)
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack 🛠️
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter
+- Provider (State Management)
+- OpenWeatherMap API
+- Geolocator
+- Custom platform channels for video backgrounds
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Setup 🔧
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/nikhileshmeher0204/weather_app.git
+```
+
+2. Create a `.env` file in the root directory:
+
+```properties
+API_KEY1=your_openweathermap_api_key
+API_KEY2=your_One_Call_API_3.0_api_key
+```
+
+3. Install dependencies
+
+```bash
+flutter clean
+flutter pub get
+```
+
+4. Run the app
+
+```bash
+flutter run --no-enable-impeller
+```
+
+## Environment Setup 🎤
+
+- Flutter SDK: >=3.0.0
+- Dart SDK: >=3.0.0
+- Android SDK: min 21
+- iOS: min 11.0
+
+## Dependencies 📢
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.0
+  geolocator: ^10.0.0
+  http: ^1.1.0
+  flutter_dotenv: ^5.0.2
+fonts:
+   - family: Poppins
+     fonts:
+       - asset: assets/fonts/Poppins-Regular.ttf
+       - asset: assets/fonts/Poppins-Medium.ttf
+       - asset: assets/fonts/Poppins-ExtraLight.ttf
+       - asset: assets/fonts/Poppins-SemiBold.ttf
+```
+
+## Screenshots 🖼️
+
+[weather_nudge_screen_record3.webm](https://github.com/user-attachments/assets/07bd3b17-846e-4067-bdab-e1f4e4dbe343)
+[weather_nudge_screen_record2.webm](https://github.com/user-attachments/assets/ec65e679-41bb-4a46-90cd-f0abf6a81317)
+[weather_nudge_screen_record1.webm](https://github.com/user-attachments/assets/41ec1126-dd1b-4924-83df-9ed8ec6dcde0)
+
+## API Reference 🌐
+
+The app uses OpenWeatherMap API for weather data:
+- ☀️ Current Weather
+- 🕒 Hourly Forecast
+- 🔃 7-day Forecast
+- 💨 Air Quality Data
+- 📍 Geocoding
+
+## License 🔒
+
+MIT License - See LICENSE file for details
+
+## Contributing 🖋️
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
