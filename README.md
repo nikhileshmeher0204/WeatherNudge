@@ -45,7 +45,7 @@ flutter pub get
 4. Run the app
 
 ```bash
-flutter run
+flutter run --no-enable-impeller
 ```
 
 ## Environment Setup 🎤
@@ -76,7 +76,7 @@ fonts:
 
 ## Screenshots 🖼️
 
-[Add screenshots here]
+
 
 ## API Reference 🌐
 
