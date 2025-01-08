@@ -77,8 +77,11 @@ fonts:
 ## Recordings 🎥
 
 https://github.com/user-attachments/assets/f553940f-4424-4e58-9a37-32e0545aa5c7
+
 https://github.com/user-attachments/assets/828be78c-a077-42bf-b9f2-70a3b60b5fcf
+
 https://github.com/user-attachments/assets/31fc541a-4cbe-466e-b8df-166e1bc429f6
+
 https://github.com/user-attachments/assets/f9d37809-8fa9-4761-842a-ed780bca6950
 
 
